@@ -19,7 +19,7 @@ This project uses [Golang](https://golang.org/), [Gin](https://github.com/gin-go
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/pius706975/golang-boilerplate-with-gin.git
+   git clone https://github.com/pius706975/the-sims-backend.git
    ```
 
 2. Install dependencies:
