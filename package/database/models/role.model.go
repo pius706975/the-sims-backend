@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Role struct {
-	ID        string    `gorm:"primarykey; type:uuid; default:uuid_generate_v4()" json:"id,omitempty" valid:"-"`
+	ID        string    `gorm:"type:varchar(50);primaryKey" json:"role_id,omitempty"`
 	Name      string    `gorm:"unique" json:"name,omitempty" valid:"type(string)"`
 	CreatedAt time.Time `json:"created_at"  valid:"-"`
 	UpdatedAt time.Time `json:"updated_at" valid:"-"`

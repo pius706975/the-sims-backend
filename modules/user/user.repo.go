@@ -17,7 +17,7 @@ func NewRepo(db *gorm.DB) *userRepo {
 	return &userRepo{db}
 }
 
-func (repo *userRepo) SignUp(data *models.User) (*models.User, error) {
+func (repo *userRepo) UserRegistration(data *models.User) (*models.User, error) {
 
 	if err := repo.db.Create(data).Error; err != nil {
 		return nil, err
@@ -25,37 +25,6 @@ func (repo *userRepo) SignUp(data *models.User) (*models.User, error) {
 
 	return data, nil
 
-}
-
-func (repo *userRepo) UpdateUserProfile(userData *models.User, id string) (*models.User, error) {
-	if err := repo.db.
-		Model(userData).
-		Where("id = ?", id).
-		Updates(userData).Error; err != nil {
-		return nil, err
-	}
-
-	return userData, nil
-}
-
-func (repo *userRepo) UpdatePassword(id string, password string) (*models.User, error) {
-	user := models.User{}
-
-	if err := repo.db.Model(&user).Where("id = ?", id).Update("password", password).Error; err != nil {
-		return nil, err
-	}
-
-	return &user, nil
-}
-
-func (repo *userRepo) ResetPassword(email string, password string) (*models.User, error) {
-	user := models.User{}
-
-	if err := repo.db.Model(&user).Where("email = ?", email).Update("password", password).Error; err != nil {
-		return nil, err
-	}
-
-	return &user, nil
 }
 
 func (repo *userRepo) CreateRefreshToken(refreshToken *models.RefreshToken) (*models.RefreshToken, error) {
@@ -130,12 +99,4 @@ func (repo *userRepo) GetUserByEmail(email string) (*models.User, error) {
 	}
 
 	return &user, nil
-}
-
-func (repo *userRepo) UpdateUser(userData *models.User) (*models.User, error) {
-	if err := repo.db.Save(userData).Error; err != nil {
-		return nil, err
-	}
-
-	return userData, nil
 }

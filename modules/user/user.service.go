@@ -1,8 +1,6 @@
 package user
 
 import (
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -20,22 +18,17 @@ func NewService(repo interfaces.UserRepo) *userService {
 	return &userService{repo}
 }
 
-func (service *userService) SignUp(userData *models.User) (gin.H, int) {
-	errorLogger, _ := utils.InitLogger()
+func (service *userService) UserRegistration(userData *models.User) (gin.H, int) {
 	hashedPassword, err := utils.HashPassword(userData.Password)
 	if err != nil {
 		return gin.H{"status": 500, "message": err.Error()}, 500
 	}
 
-	otpCode := utils.GenerateOTP(6)
-
 	userData.Username = utils.GenerateUsername(userData.Email)
 	userData.Password = hashedPassword
-	userData.OTPCode = otpCode
-	userData.OTPExpiration = time.Now().Add(10 * time.Minute)
 	userData.RoleID = "f4e1855f-80a2-4ee5-a1ec-e80a9a3d3648"
 
-	newData, err := service.repo.SignUp(userData)
+	newData, err := service.repo.UserRegistration(userData)
 	if err != nil {
 		if err.Error() == "ERROR: duplicate key value violates unique constraint \"uni_users_email\" (SQLSTATE 23505)" {
 			return gin.H{"status": 409, "message": "Email is already used"}, 409
@@ -43,220 +36,7 @@ func (service *userService) SignUp(userData *models.User) (gin.H, int) {
 		return gin.H{"status": 500, "message": err.Error()}, 500
 	}
 
-	message := utils.EmailData{
-		Text:    "",
-		Name:    strings.Split(userData.Name, " ")[0],
-		Subject: "Account Verification",
-		OTPCode: otpCode,
-	}
-
-	header := "Verify Your Account"
-	text1 := "Hi " + message.Name + ". Thank you for registering!"
-	text2 := "Your OTP code is:"
-	text3 := otpCode
-	footerText := "Please verify your email to activate your account."
-	year := strconv.Itoa(time.Now().Year())
-
-	message.Text = utils.EmailHTML(header, text1, text2, text3, footerText, year)
-
-	go func() {
-		err := utils.SendMail(userData, &message)
-		if err != nil {
-			errorLogger.Println("Failed to send OTP email to ", userData.Email, err)
-		}
-	}()
-
 	return gin.H{"status": 201, "message": "User created successfully", "data": newData}, 201
-}
-
-func (service *userService) VerifyAccount(email string, otp string) (gin.H, int) {
-	user, err := service.repo.GetUserByEmail(email)
-	if err != nil {
-		if err.Error() == "record not found" {
-			return gin.H{"status": 404, "message": "User not found"}, 404
-		}
-
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	if user.OTPCode != otp {
-		return gin.H{"status": 401, "message": "Invalid OTP code"}, 401
-	}
-
-	if time.Now().After(user.OTPExpiration) {
-		return gin.H{"status": 401, "message": "OTP code has expired"}, 401
-	}
-
-	user.IsVerified = true
-	user.OTPCode = ""
-	user.OTPExpiration = time.Time{}
-
-	_, err = service.repo.UpdateUser(user)
-	if err != nil {
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	return gin.H{"status": 200, "message": "Account verified successfully"}, 200
-}
-
-func (service *userService) SendNewOTPCode(email string) (gin.H, int) {
-	errorLogger, _ := utils.InitLogger()
-	user, err := service.repo.GetUserByEmail(email)
-	if err != nil {
-		if err.Error() == "record not found" {
-			return gin.H{"status": 404, "message": "User not found"}, 404
-		}
-
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	otpCode := utils.GenerateOTP(6)
-	user.OTPCode = otpCode
-	user.OTPExpiration = time.Now().Add(10 * time.Minute)
-
-	_, err = service.repo.UpdateUser(user)
-	if err != nil {
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	message := utils.EmailData{
-		Text:    "",
-		Name:    strings.Split(user.Name, " ")[0],
-		Subject: "Account Verification",
-		OTPCode: otpCode,
-	}
-
-	header := "Verify Your Account"
-	text1 := "Hi " + message.Name + ". We have sent you a new OTP code. If you did not request this, please ignore this email."
-	text2 := "Your OTP code is:"
-	text3 := otpCode
-	footerText := "Please verify your email to activate your account."
-	year := strconv.Itoa(time.Now().Year())
-
-	message.Text = utils.EmailHTML(header, text1, text2, text3, footerText, year)
-
-	go func() {
-		err = utils.SendMail(user, &message)
-		if err != nil {
-			errorLogger.Println("Failed to send OTP email to ", email, err)
-		}
-	}()
-
-	return gin.H{"status": 200, "message": "New OTP code sent successfully"}, 200
-}
-
-func (service *userService) ForgotPasswordVerification(email string) (gin.H, int) {
-	errorLogger, _ := utils.InitLogger()
-	user, err := service.repo.GetUserByEmail(email)
-	if err != nil {
-		if err.Error() == "record not found" {
-			return gin.H{"status": 404, "message": "User not found"}, 404
-		}
-
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	otpCode := utils.GenerateOTP(6)
-	user.OTPCode = otpCode
-	user.OTPExpiration = time.Now().Add(30 * time.Minute)
-
-	_, err = service.repo.UpdateUser(user)
-	if err != nil {
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	message := utils.EmailData{
-		Text:    "",
-		Name:    strings.Split(user.Name, " ")[0],
-		Subject: "Forgot Password",
-		OTPCode: otpCode,
-	}
-
-	header := "Verify Your Account"
-	text1 := "Hi " + message.Name + ". Use the OTP code below to reset your password."
-	text2 := "Your OTP code is:"
-	text3 := otpCode
-	footerText := "If you did not request this, please ignore this email."
-	year := strconv.Itoa(time.Now().Year())
-
-	message.Text = utils.EmailHTML(header, text1, text2, text3, footerText, year)
-
-	go func() {
-		err = utils.SendMail(user, &message)
-		if err != nil {
-			errorLogger.Println("Failed to send OTP email to ", user.Email, err)
-		}
-	}()
-
-	return gin.H{"status": 200, "message": "Forgot password sent successfully"}, 200
-}
-
-func (service *userService) UpdateUserProfile(userData *models.User, id string) (gin.H, int) {
-	_, err := service.repo.GetUserById(id)
-
-	if err != nil {
-		if err.Error() == "record not found" {
-			return gin.H{"status": 404, "message": "User not found"}, 404
-		}
-
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	updatedUser, err := service.repo.UpdateUserProfile(userData, id)
-
-	if err != nil {
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	return gin.H{"status": 200, "message": "User updated successfully", "data": &updatedUser}, 200
-}
-
-func (service *userService) UpdatePassword(id string, password string) (gin.H, int) {
-	_, err := service.repo.GetUserById(id)
-
-	if err != nil {
-		if err.Error() == "record not found" {
-			return gin.H{"status": 404, "message": "User not found"}, 404
-		}
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	hashedPassword, err := utils.HashPassword(password)
-	if err != nil {
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	_, err = service.repo.UpdatePassword(id, hashedPassword)
-
-	if err != nil {
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	return gin.H{"status": 200, "message": "Password updated successfully"}, 200
-}
-
-func (service *userService) ResetPassword(email string, password string) (gin.H, int) {
-	_, err := service.repo.GetUserByEmail(email)
-
-	if err != nil {
-		if err.Error() == "record not found" {
-			return gin.H{"status": 404, "message": "User not found"}, 404
-		}
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	hashedPassword, err := utils.HashPassword(password)
-	if err != nil {
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	_, err = service.repo.ResetPassword(email, hashedPassword)
-
-	if err != nil {
-		return gin.H{"status": 500, "message": err.Error()}, 500
-	}
-
-	return gin.H{"status": 200, "message": "Password reset successfully"}, 200
 }
 
 func (service *userService) CreateRefreshToken(userId string) (gin.H, int) {
