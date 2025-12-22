@@ -5,19 +5,19 @@ import "time"
 type User struct {
 	ID string `gorm:"primarykey; type:uuid; default:uuid_generate_v4()" json:"user_id,omitempty" valid:"-"`
 
-	RoleID string `gorm:"type:varchar(50);not null" json:"role_id"`
-	Role   Role   `gorm:"foreignKey:RoleID;references:ID"`
+	RoleID *string `gorm:"type:uuid;default:null" json:"role_id,omitempty"`
+	Role   *Role   `gorm:"foreignKey:RoleID;references:ID"`
 
 	Name        string    `gorm:"not null" json:"name,omitempty" valid:"type(string), required~Name is required"`
-	Username    string    `json:"username,omitempty" valid:"type(string)"`
+	Username    string    `gorm:"not null" json:"username,omitempty" valid:"type(string)"`
 	Email       string    `gorm:"not null;unique" json:"email" valid:"email, required~Email is required"`
 	Password    string    `gorm:"not null" json:"password,omitempty" valid:"type(string), required~Password is required"`
 	IsActivated bool      `gorm:"default: false" json:"is_activated,omitempty" valid:"-"`
 	IsSuperUser bool      `gorm:"default: false" json:"is_superuser,omitempty" valid:"-"`
 	CreatedAt   time.Time `json:"created_at" valid:"-"`
-	CreatedBy   string    `gorm:"null" json:"created_by,omitempty" valid:"type(string)"`
-	UpdatedAt   time.Time `json:"updated_at" valid:"-"`
-	UpdatedBy   string    `gorm:"null" json:"updated_by,omitempty" valid:"type(string)"`
+	CreatedBy   string    `gorm:"default:null" json:"created_by,omitempty" valid:"type(string)"`
+	UpdatedAt   time.Time `gorm:"default:null" json:"updated_at" valid:"-"`
+	UpdatedBy   string    `gorm:"default:null" json:"updated_by,omitempty" valid:"type(string)"`
 }
 
 type Users []User

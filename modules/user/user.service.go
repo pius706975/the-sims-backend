@@ -26,7 +26,7 @@ func (service *userService) UserRegistration(userData *models.User) (gin.H, int)
 
 	userData.Username = utils.GenerateUsername(userData.Email)
 	userData.Password = hashedPassword
-	userData.RoleID = "f4e1855f-80a2-4ee5-a1ec-e80a9a3d3648"
+	// userData.RoleID = "f4e1855f-80a2-4ee5-a1ec-e80a9a3d3648"
 
 	newData, err := service.repo.UserRegistration(userData)
 	if err != nil {
