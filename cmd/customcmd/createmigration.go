@@ -26,18 +26,18 @@ func init() {
 func createMigration(cmd *cobra.Command, args []string) error {
 	migrationsDir := "package/database/migrations"
 
-	// pastikan folder ada
+	// check if the directory exists
 	if _, err := os.Stat(migrationsDir); os.IsNotExist(err) {
 		os.MkdirAll(migrationsDir, os.ModePerm)
 	}
 
-	// baca file di folder migrations
+	// read the migration files
 	files, err := os.ReadDir(migrationsDir)
 	if err != nil {
 		return err
 	}
 
-	// cari nomor versi terakhir
+	// find the last version number of the migration files
 	version := 0
 	r := regexp.MustCompile(`^(\d+)_`)
 	for _, f := range files {
@@ -50,11 +50,11 @@ func createMigration(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	// increment untuk migration baru
+	// increment version number for the new migration file
 	version++
 	versionStr := fmt.Sprintf("%04d", version)
 
-	// buat nama file
+	// generate file name
 	upFile := filepath.Join(migrationsDir, fmt.Sprintf("%s_%s.up.sql", versionStr, migrationName))
 	downFile := filepath.Join(migrationsDir, fmt.Sprintf("%s_%s.down.sql", versionStr, migrationName))
 
