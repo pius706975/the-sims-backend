@@ -1,0 +1,21 @@
+CREATE TABLE employees (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    employee_number VARCHAR(50) NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    birth_place VARCHAR(100) NOT NULL,
+    birth_date DATE NOT NULL,
+    religion VARCHAR(50) NOT NULL,
+    marital_status VARCHAR(50) NOT NULL,
+    address TEXT NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    identify_card_number BIGINT NOT NULL,
+    join_date TIMESTAMP,
+    end_date TIMESTAMP,
+    is_activated BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    created_by VARCHAR(100),
+    updated_at TIMESTAMP,
+    updated_by VARCHAR(100)
+);

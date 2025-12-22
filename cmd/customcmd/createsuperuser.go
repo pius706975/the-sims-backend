@@ -1,4 +1,4 @@
-package createsuperuser
+package customcmd
 
 import (
 	"fmt"

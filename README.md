@@ -91,10 +91,22 @@ is faster and more stable for production environments
 
 
 ### Database migration
+Before migrating the DB, create the migrations first using RAW SQL query.
+```bash
+go run . create-migration --name <migration name>
+
+# For example
+go run . create-migration --name create_employees
+```
+
+It will create a new version of the existing migrations.
+
+After creating the migration file and write the SQL query, run the command below to migrate the tables. 
+
 ```bash
 # migrate the database models
 go run . migration -u 
-# drop database
+# drop all databases
 go run . migration -d
 ```
 ## API Documentation

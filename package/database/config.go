@@ -20,3 +20,15 @@ func NewDB() (*gorm.DB, error) {
 
 	return gormDb, nil
 }
+
+func GetDatabaseURL() string {
+	envCfg := envConfig.LoadConfig()
+	return fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		envCfg.DBUsername,
+		envCfg.DBPassword,
+		envCfg.DBHost,
+		envCfg.DBPort,
+		envCfg.DBName,
+	)
+}

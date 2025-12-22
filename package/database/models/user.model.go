@@ -13,7 +13,7 @@ type User struct {
 	Email       string    `gorm:"not null;unique" json:"email" valid:"email, required~Email is required"`
 	Password    string    `gorm:"not null" json:"password,omitempty" valid:"type(string), required~Password is required"`
 	IsActivated bool      `gorm:"default: false" json:"is_activated,omitempty" valid:"-"`
-	IsSuperUser bool      `gorm:"default: false" json:"is_superuser,omitempty" valid:"-"`
+	IsSuperUser bool      `gorm:"column:is_superuser;default: false" json:"is_superuser,omitempty" valid:"-"`
 	CreatedAt   time.Time `json:"created_at" valid:"-"`
 	CreatedBy   string    `gorm:"default:null" json:"created_by,omitempty" valid:"type(string)"`
 	UpdatedAt   time.Time `gorm:"default:null" json:"updated_at" valid:"-"`

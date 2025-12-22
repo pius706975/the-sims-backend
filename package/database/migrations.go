@@ -1,8 +1,11 @@
 package database
 
 import (
-	"github.com/pius706975/the-sims-backend/package/database/models"
 	"log"
+
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres" 
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 
 	"github.com/spf13/cobra"
 )
@@ -23,20 +26,30 @@ func init() {
 }
 
 func dbMigrate(cmd *cobra.Command, args []string) error {
+	dsn := GetDatabaseURL()
 
-	db, err := NewDB()
+	m, err := migrate.New(
+		"file://package/database/migrations",
+		dsn,
+	)
 	if err != nil {
 		return err
 	}
 
-	if migDown {
-		log.Println("Migration down done")
-		return db.Migrator().DropTable(&models.User{}, &models.Role{}, &models.RefreshToken{}, &models.Employee{})
+	if migUp {
+		log.Println("Running migration up...")
+		if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+			return err
+		}
+		log.Println("Migration up done")
 	}
 
-	if migUp {
-		log.Println("Migration up done")
-		return db.AutoMigrate(&models.User{}, &models.Role{}, &models.RefreshToken{}, &models.Employee{})
+	if migDown {
+		log.Println("Running migration down...")
+		if err := m.Down(); err != nil && err != migrate.ErrNoChange {
+			return err
+		}
+		log.Println("Migration down done")
 	}
 
 	return nil
