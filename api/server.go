@@ -24,20 +24,29 @@ var ServeCMD = &cobra.Command{
 	RunE:  serve,
 }
 
-func corsHandler() *cors.Cors {
-	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
+func corsHandler(allowedOrigins []string) *cors.Cors {
+	return cors.New(cors.Options{
+		AllowedOrigins: allowedOrigins,
 		AllowedMethods: []string{
-			http.MethodHead,
 			http.MethodGet,
 			http.MethodPost,
 			http.MethodPut,
 			http.MethodPatch,
 			http.MethodDelete,
+			http.MethodOptions,
 		},
+		AllowedHeaders: []string{
+			"Authorization",
+			"Content-Type",
+			"Accept",
+			"Origin",
+			"X-Requested-With",
+		},
+		ExposedHeaders: []string{
+			"Content-Length",
+		},
+		AllowCredentials: false,
 	})
-
-	return c
 }
 
 func serve(cmd *cobra.Command, args []string) error {
@@ -72,7 +81,7 @@ func serve(cmd *cobra.Command, args []string) error {
 	}
 
 	// CORS handler
-	handler := corsHandler().Handler(router)
+	handler := corsHandler(envCfg.AllowedOrigins).Handler(router)
 
 	// HTTP Server
 	srv := &http.Server{

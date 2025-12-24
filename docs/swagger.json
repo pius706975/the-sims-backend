@@ -15,8 +15,6 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:5080",
-    "basePath": "/api",
     "paths": {
         "/api/auth/create-new-access-token": {
             "post": {

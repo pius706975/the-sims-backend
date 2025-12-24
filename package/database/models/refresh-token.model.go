@@ -12,8 +12,6 @@ type RefreshToken struct {
 
 	Token     string    `gorm:"not null;unique" json:"refresh_token"`
 	ExpiresAt time.Time `gorm:"not null" json:"expires_at"`
-	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
 func (RefreshToken) TableName() string {

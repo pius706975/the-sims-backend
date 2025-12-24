@@ -35,14 +35,24 @@ func (service *authService) SignIn(userData *models.User) (gin.H, int) {
 		return gin.H{"status": 401, "message": "Email or password is incorrect"}, 401
 	}
 
-	jwt := middlewares.NewToken(user.ID, time.Minute*15)
+	tokenPayload := middlewares.TokenPayload{
+		UserId:      user.ID,
+		RoleId:      user.RoleID,
+		Email:       user.Email,
+		Username:    user.Username,
+		Name:        user.Name,
+		IsActivated: user.IsActivated,
+		IsSuperUser: user.IsSuperUser,
+	}
+
+	jwt := middlewares.NewToken(tokenPayload, time.Minute*15)
 	accessToken, err := jwt.CreateToken()
 
 	if err != nil {
 		return gin.H{"status": 500, "message": err.Error()}, 500
 	}
 
-	refreshTokenJwt := middlewares.NewToken(user.ID, time.Hour*168)
+	refreshTokenJwt := middlewares.NewToken(tokenPayload, time.Hour*168)
 	refreshToken, err := refreshTokenJwt.CreateToken()
 
 	if err != nil {
@@ -61,7 +71,7 @@ func (service *authService) SignIn(userData *models.User) (gin.H, int) {
 		return gin.H{"status": 500, "message": "Failed to save refresh token"}, 500
 	}
 
-	return gin.H{"data": user, "tokens": tokenResponse{
+	return gin.H{"tokens": tokenResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}}, 200
@@ -73,7 +83,18 @@ func (service *authService) CreateNewAccessToken(refreshToken string) (gin.H, in
 		return gin.H{"status": 401, "message": "Invalid refresh token"}, 401
 	}
 
-	jwt := middlewares.NewToken(tokenData.UserID, time.Minute*15)
+	tokenPayload := middlewares.TokenPayload{
+		UserId:      tokenData.UserID,
+		RoleId:      tokenData.User.RoleID,
+		Email:       tokenData.User.Email,
+		Username:    tokenData.User.Username,
+		Name:        tokenData.User.Name,
+		IsActivated: tokenData.User.IsActivated,
+		IsSuperUser: tokenData.User.IsSuperUser,
+	}
+
+	jwt := middlewares.NewToken(tokenPayload, time.Minute*15)
+
 	accessToken, err := jwt.CreateToken()
 	if err != nil {
 		return gin.H{"status": 500, "message": "Failed to create access token"}, 500

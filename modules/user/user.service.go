@@ -50,7 +50,17 @@ func (service *userService) CreateRefreshToken(userId string) (gin.H, int) {
 		return gin.H{"status": 500, "message": err.Error()}, 500
 	}
 
-	jwt := middlewares.NewToken(user.ID, time.Hour*168)
+	tokenPayload := middlewares.TokenPayload{
+		UserId:      user.ID,
+		RoleId:      user.RoleID,
+		Email:       user.Email,
+		Username:    user.Username,
+		Name:        user.Name,
+		IsActivated: user.IsActivated,
+		IsSuperUser: user.IsSuperUser,
+	}
+
+	jwt := middlewares.NewToken(tokenPayload, time.Hour*168)
 	token, err := jwt.CreateToken()
 
 	if err != nil {
