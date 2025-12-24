@@ -83,14 +83,19 @@ func (service *authService) CreateNewAccessToken(refreshToken string) (gin.H, in
 		return gin.H{"status": 401, "message": "Invalid refresh token"}, 401
 	}
 
+	payloadToken, err := middlewares.DecodeRefreshToken(tokenData.Token)
+	if err != nil {
+		return gin.H{"status": 401, "message": "Invalid token"}, 401
+	}
+
 	tokenPayload := middlewares.TokenPayload{
-		UserId:      tokenData.UserID,
-		RoleId:      tokenData.User.RoleID,
-		Email:       tokenData.User.Email,
-		Username:    tokenData.User.Username,
-		Name:        tokenData.User.Name,
-		IsActivated: tokenData.User.IsActivated,
-		IsSuperUser: tokenData.User.IsSuperUser,
+		UserId:      payloadToken.UserId,
+		RoleId:      payloadToken.RoleId,
+		Email:       payloadToken.Email,
+		Username:    payloadToken.Username,
+		Name:        payloadToken.Name,
+		IsActivated: payloadToken.IsActivated,
+		IsSuperUser: payloadToken.IsSuperUser,
 	}
 
 	jwt := middlewares.NewToken(tokenPayload, time.Minute*15)

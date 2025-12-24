@@ -3,9 +3,9 @@ package models
 import "time"
 
 type User struct {
-	ID string `gorm:"primarykey; type:uuid; default:uuid_generate_v4()" json:"user_id,omitempty" valid:"-"`
+	ID string `gorm:"primarykey; type:uuid; default:uuid_generate_v4(); column:user_id" json:"user_id,omitempty" valid:"-"`
 
-	RoleID *string `gorm:"type:uuid;default:null" json:"role_id,omitempty"`
+	RoleID *string `gorm:"type:varchar(50);default:null" json:"role_id,omitempty"`
 	Role   *Role   `gorm:"foreignKey:RoleID;references:ID"`
 
 	Name        string    `gorm:"not null" json:"name,omitempty" valid:"type(string), required~Name is required"`

@@ -90,6 +90,88 @@
                 }
             }
         },
+        "/api/employment/create": {
+            "post": {
+                "description": "Create a new employee type with manual ID and name of the type",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "EmployeeTypes"
+                ],
+                "summary": "Create employee type",
+                "parameters": [
+                    {
+                        "description": "EmployeeType data",
+                        "name": "employeeTypeData",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateEmployeeTypeRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/employment/employee-types": {
+            "get": {
+                "description": "Fetch all employee types",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "EmployeeTypes"
+                ],
+                "summary": "Get all employee types",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/role": {
             "get": {
                 "description": "Get all user roles",
@@ -415,6 +497,17 @@
             ],
             "properties": {
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CreateEmployeeTypeRequest": {
+            "type": "object",
+            "properties": {
+                "employee_type_id": {
+                    "type": "string"
+                },
+                "employee_type_name": {
                     "type": "string"
                 }
             }

@@ -159,7 +159,7 @@ func (controller *userController) GetUsers(ctx *gin.Context) {
 // @Failure 500
 // @Router /api/user/{id} [get]
 func (controller *userController) GetUserById(ctx *gin.Context) {
-	id := ctx.Param("id")
+	id := ctx.Param("user_id")
 
 	responseData, status := controller.service.GetUserById(id)
 
@@ -178,7 +178,7 @@ func (controller *userController) GetUserById(ctx *gin.Context) {
 // @Failure 500
 // @Router /api/user/profile [get]
 func (controller *userController) GetProfile(ctx *gin.Context) {
-	userID, exists := ctx.Get("id")
+	userID, exists := ctx.Get("user_id")
 
 	if !exists {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})

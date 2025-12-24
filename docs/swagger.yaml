@@ -6,6 +6,13 @@ definitions:
     required:
     - name
     type: object
+  models.CreateEmployeeTypeRequest:
+    properties:
+      employee_type_id:
+        type: string
+      employee_type_name:
+        type: string
+    type: object
   models.CreateNewAccessTokenRequest:
     properties:
       refresh_token:
@@ -91,6 +98,60 @@ paths:
       summary: Login as an authenticated user
       tags:
       - Authentication
+  /api/employment/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new employee type with manual ID and name of the type
+      parameters:
+      - description: EmployeeType data
+        in: body
+        name: employeeTypeData
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateEmployeeTypeRequest'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      summary: Create employee type
+      tags:
+      - EmployeeTypes
+  /api/employment/employee-types:
+    get:
+      consumes:
+      - application/json
+      description: Fetch all employee types
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get all employee types
+      tags:
+      - EmployeeTypes
   /api/role:
     get:
       consumes:

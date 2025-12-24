@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     role_id VARCHAR,
     name VARCHAR NOT NULL,
     username VARCHAR NOT NULL,
@@ -11,5 +11,5 @@ CREATE TABLE users (
     created_by VARCHAR,
     updated_at TIMESTAMP,
     updated_by VARCHAR,
-    CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES roles(id)
+    CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES roles(role_id)
 );

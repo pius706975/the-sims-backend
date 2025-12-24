@@ -31,7 +31,12 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		ctx.Set("id", checkToken.UserId)
+		ctx.Set("user_id", checkToken.UserId)
+		ctx.Set("email", checkToken.Email)
+		ctx.Set("username", checkToken.Username)
+		ctx.Set("name", checkToken.Name)
+		ctx.Set("is_activated", checkToken.IsActivated)
+		ctx.Set("is_superuser", checkToken.IsSuperUser)
 
 		ctx.Next()
 	}
