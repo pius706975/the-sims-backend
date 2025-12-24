@@ -56,8 +56,8 @@ func (EmployeeType) TableName() string {
 
 // Employment Status
 type EmploymentStatus struct {
-	ID                   string    `gorm:"type:varchar(50);primaryKey;column:employee_type_id" json:"employee_type_id,omitempty"`
-	EmploymentStatusName string    `gorm:"not null" json:"employee_status_name,omitempty" valid:"type(string), required~EmploymentStatusName is required"`
+	ID                   string    `gorm:"type:varchar(50);primaryKey;column:employment_status_id" json:"employment_status_id,omitempty"`
+	EmploymentStatusName string    `gorm:"not null" json:"employment_status_name,omitempty" valid:"type(string), required~EmploymentStatusName is required"`
 	CreatedAt            time.Time `json:"created_at" valid:"-"`
 	CreatedBy            string    `gorm:"default:null" json:"created_by,omitempty" valid:"type(string)"`
 	UpdatedAt            time.Time `gorm:"default:null" json:"updated_at" valid:"-"`

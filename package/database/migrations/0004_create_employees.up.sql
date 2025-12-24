@@ -9,7 +9,7 @@ CREATE TABLE employee_types (
 
 CREATE TABLE employment_statuses (
     employment_status_id VARCHAR(50) PRIMARY KEY NOT NULL,
-    employee_status_name VARCHAR NOT NULL,
+    employment_status_name VARCHAR NOT NULL,
     created_at TIMESTAMP,
     created_by VARCHAR,
     updated_at TIMESTAMP,

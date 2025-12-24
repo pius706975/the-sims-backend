@@ -137,6 +137,48 @@
                 }
             }
         },
+        "/api/employment/delete/{employee_type_id}": {
+            "delete": {
+                "description": "Delete employee type by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "EmployeeTypes"
+                ],
+                "summary": "Delete an employee type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "EmployeeType ID",
+                        "name": "employee_type_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/employment/employee-types": {
             "get": {
                 "description": "Fetch all employee types",

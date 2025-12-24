@@ -8,14 +8,17 @@ import (
 type EmploymentRepo interface {
 	CreateEmployeeType(employeeTypeData *models.EmployeeType) (*models.EmployeeType, error)
 	GetExistingEmployeeType(id, name string) (*models.EmployeeType, error)
-	// DeleteEmployeeType(id string) error
+	DeleteEmployeeType(id string) error
 	GetEmployeeTypes() (*models.EmployeeTypes, error)
-	// GetEmployeeTypeById(id string) (*models.EmployeeType, error)
+
+	CreateEmploymentStatus(employmentStatusData *models.EmploymentStatus) (*models.EmploymentStatus, error)
+	GetExistingEmploymentStatus(id, name string) (*models.EmploymentStatus, error)
 }
 
 type EmploymentService interface {
-	CreateEmployeeType(employeeTypeData *models.EmployeeType, decodedUsername string) (gin.H, int)
-	// DeleteEmployeeType(id string) (gin.H, int)
+	CreateEmployeeType(employeeTypeData *models.EmployeeType, decodedCreatorName string) (gin.H, int)
+	DeleteEmployeeType(id string) (gin.H, int)
 	GetEmployeeTypes() (gin.H, int)
-	// GetEmployeeTypeById(id string) (gin.H, int)
+
+	CreateEmploymentStatus(employmentStatusData *models.EmploymentStatus, decodedCreatorName string) (gin.H, int)
 }
