@@ -108,7 +108,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "EmployeeTypes"
+                    "Employee Type"
                 ],
                 "summary": "Create employee type",
                 "parameters": [
@@ -145,6 +145,95 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/employment/create/employment-status": {
+            "post": {
+                "description": "Create a new employment status with manual ID and name of the type",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Employment Status"
+                ],
+                "summary": "Create employment status",
+                "parameters": [
+                    {
+                        "description": "EmploymentStatus data",
+                        "name": "employmentStatusData",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateEmploymentStatusRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/employment/delete/employment-status/{employment_status_id}": {
+            "delete": {
+                "description": "Delete employment statuses by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Employment Status"
+                ],
+                "summary": "Delete an employment statuses",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "EmploymentStatus ID",
+                        "name": "employment_status_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/employment/delete/{employee_type_id}": {
             "delete": {
                 "description": "Delete employee type by id",
@@ -155,7 +244,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "EmployeeTypes"
+                    "Employee Type"
                 ],
                 "summary": "Delete an employee type",
                 "parameters": [
@@ -197,9 +286,44 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "EmployeeTypes"
+                    "Employee Type"
                 ],
                 "summary": "Get all employee types",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/employment/employment-statuses": {
+            "get": {
+                "description": "Fetch all employment statuses",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Employment Status"
+                ],
+                "summary": "Get all employment statuses",
                 "parameters": [
                     {
                         "type": "string",
@@ -558,6 +682,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "employee_type_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CreateEmploymentStatusRequest": {
+            "type": "object",
+            "properties": {
+                "employment_status_id": {
+                    "type": "string"
+                },
+                "employment_status_name": {
                     "type": "string"
                 }
             }

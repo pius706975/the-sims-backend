@@ -13,6 +13,13 @@ definitions:
       employee_type_name:
         type: string
     type: object
+  models.CreateEmploymentStatusRequest:
+    properties:
+      employment_status_id:
+        type: string
+      employment_status_name:
+        type: string
+    type: object
   models.CreateNewAccessTokenRequest:
     properties:
       refresh_token:
@@ -128,7 +135,38 @@ paths:
           description: Internal Server Error
       summary: Create employee type
       tags:
-      - EmployeeTypes
+      - Employee Type
+  /api/employment/create/employment-status:
+    post:
+      consumes:
+      - application/json
+      description: Create a new employment status with manual ID and name of the type
+      parameters:
+      - description: EmploymentStatus data
+        in: body
+        name: employmentStatusData
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateEmploymentStatusRequest'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      summary: Create employment status
+      tags:
+      - Employment Status
   /api/employment/delete/{employee_type_id}:
     delete:
       consumes:
@@ -156,7 +194,35 @@ paths:
           description: Internal Server Error
       summary: Delete an employee type
       tags:
-      - EmployeeTypes
+      - Employee Type
+  /api/employment/delete/employment-status/{employment_status_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete employment statuses by id
+      parameters:
+      - description: EmploymentStatus ID
+        in: path
+        name: employment_status_id
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Delete an employment statuses
+      tags:
+      - Employment Status
   /api/employment/employee-types:
     get:
       consumes:
@@ -179,7 +245,30 @@ paths:
           description: Internal Server Error
       summary: Get all employee types
       tags:
-      - EmployeeTypes
+      - Employee Type
+  /api/employment/employment-statuses:
+    get:
+      consumes:
+      - application/json
+      description: Fetch all employment statuses
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get all employment statuses
+      tags:
+      - Employment Status
   /api/role:
     get:
       consumes:

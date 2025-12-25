@@ -75,3 +75,8 @@ type CreateEmployeeTypeRequest struct {
 	ID               string `json:"employee_type_id"`
 	EmployeeTypeName string `json:"employee_type_name"`
 }
+
+type CreateEmploymentStatusRequest struct {
+	ID               string `json:"employment_status_id"`
+	EmploymentStatusName string `json:"employment_status_name"`
+}

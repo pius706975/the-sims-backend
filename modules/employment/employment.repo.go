@@ -44,7 +44,7 @@ func (repo *employmentRepo) GetEmployeeTypes() (*models.EmployeeTypes, error) {
 	var data models.EmployeeTypes
 
 	err := repo.db.
-		Select("employee_type_id, employee_type_name, created_at, created_by, updated_at, updated_by").
+		Select("employee_type_id, employee_type_name, created_at, created_by").
 		Order("employee_type_id").
 		Find(&data).Error
 
@@ -83,6 +83,22 @@ func (repo *employmentRepo) CreateEmploymentStatus(data *models.EmploymentStatus
 	return data, nil
 }
 
+func (repo *employmentRepo) DeleteEmploymentStatus(id string) error {
+	result := repo.db.
+		Where("employment_status_id = ?", id).
+		Delete(&models.EmploymentStatus{})
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
+}
+
 func (repo *employmentRepo) GetExistingEmploymentStatus(id, name string) (*models.EmploymentStatus, error) {
 	var existingEmploymentStatus models.EmploymentStatus
 
@@ -95,4 +111,23 @@ func (repo *employmentRepo) GetExistingEmploymentStatus(id, name string) (*model
 		return nil, err
 	}
 	return &existingEmploymentStatus, nil
+}
+
+func (repo *employmentRepo) GetEmploymentStatuses() (*models.EmploymentStatuses, error) {
+	var data models.EmploymentStatuses
+
+	err := repo.db.
+		Select("employment_status_id, employment_status_name, created_at, created_by").
+		Order("employment_status_id").
+		Find(&data).Error
+
+	if err != nil {
+		return nil, errors.New("Failed to get employment statuses")
+	}
+
+	if len(data) <= 0 {
+		return nil, errors.New("Employment Statuses is empty")
+	}
+
+	return &data, nil
 }

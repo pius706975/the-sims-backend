@@ -100,7 +100,7 @@ func (service *employmentService) CreateEmploymentStatus(employmentStatusData *m
 	if existingEmploymentStatus != nil {
 		return gin.H{
 			"status":  400,
-			"message": "Employee type with the same ID or Name already exists",
+			"message": "Employment status with the same ID or Name already exists",
 		}, 400
 	}
 
@@ -114,7 +114,47 @@ func (service *employmentService) CreateEmploymentStatus(employmentStatusData *m
 
 	return gin.H{
 		"status":  201,
-		"message": "Employee type created successfully",
+		"message": "Employment status created successfully",
 		"data":    newData,
 	}, 201
+}
+
+func (service *employmentService) DeleteEmploymentStatus(id string) (gin.H, int) {
+	err := service.repo.DeleteEmploymentStatus(id)
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gin.H{
+				"status":  404,
+				"message": "Employment status not found",
+			}, 404
+		}
+
+		return gin.H{
+			"status":  500,
+			"message": err.Error(),
+		}, 500
+	}
+
+	return gin.H{
+		"status":  200,
+		"message": "Employment status deleted successfully",
+	}, 200
+}
+
+func (service *employmentService) GetEmploymentStatuses() (gin.H, int) {
+	employmentStatuses, err := service.repo.GetEmploymentStatuses()
+
+	if err != nil {
+		return gin.H{
+			"status":  404,
+			"message": err.Error(),
+		}, 404
+	}
+
+	return gin.H{
+		"status":  200,
+		"message": "All employment statuses fetched successfully",
+		"data":    employmentStatuses,
+	}, 200
 }

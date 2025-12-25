@@ -13,6 +13,8 @@ type EmploymentRepo interface {
 
 	CreateEmploymentStatus(employmentStatusData *models.EmploymentStatus) (*models.EmploymentStatus, error)
 	GetExistingEmploymentStatus(id, name string) (*models.EmploymentStatus, error)
+	DeleteEmploymentStatus(id string) error
+	GetEmploymentStatuses() (*models.EmploymentStatuses, error)
 }
 
 type EmploymentService interface {
@@ -21,4 +23,6 @@ type EmploymentService interface {
 	GetEmployeeTypes() (gin.H, int)
 
 	CreateEmploymentStatus(employmentStatusData *models.EmploymentStatus, decodedCreatorName string) (gin.H, int)
+	DeleteEmploymentStatus(id string) (gin.H, int)
+	GetEmploymentStatuses() (gin.H, int)
 }
