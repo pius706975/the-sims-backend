@@ -31,23 +31,27 @@ This project uses [Golang](https://golang.org/), [Gin](https://github.com/gin-go
 
 1. Copy the `.env.example` file to `.env`:
    ```bash
-    APP_PORT = 5000
-    BASE_URL = http://localhost:5000/api
-    MODE = development
+    APP_PORT=5001
+    BASE_URL=http://localhost:5001/api
+    MODE=development
+    DEBUG=false
+    
+    # Allowed origin is important. Make sure you specify the target origins such as frontend so that this backend can be accessed. Do not use "*" in the CORS handler especially in production environment.
+    ALLOWED_ORIGINS=http://localhost:5001,http://localhost:5001/api/docs/index.html
 
-    DB_PORT = <Db Port>
-    DB_USERNAME = <Db Username>
-    DB_PASSWORD = <Db Password>
-    DB_NAME = <Db Name>
-    DB_HOST = <Db Host>
+    DB_PORT=<Db Port>
+    DB_USERNAME=<Db Username>
+    DB_PASSWORD=<Db Password>
+    DB_NAME=<Db Name>
+    DB_HOST=<Db Host>
 
-    MAILER_PORT = <smtp port>
-    MAILER_HOST = <smtp host>
-    MAILER_EMAIL = <sender email>
-    MAILER_PASSWORD = <password>
+    MAILER_PORT=<smtp port>
+    MAILER_HOST=<smtp host>
+    MAILER_EMAIL=<sender email>
+    MAILER_PASSWORD=<password>
 
-    JWT_ACCESS_TOKEN_SECRET = <Access Token Secret>
-    JWT_REFRESH_TOKEN_SECRET = <Refresh Token Secret>
+    JWT_ACCESS_TOKEN_SECRET=<Access Token Secret>
+    JWT_REFRESH_TOKEN_SECRET=<Refresh Token Secret>
    ```
 
 2. Update the `.env` file with your environment variables.
