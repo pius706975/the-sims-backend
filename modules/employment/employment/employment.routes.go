@@ -9,7 +9,9 @@ func EmploymentRoutes(router *gin.Engine, controller *employmentController, pref
 	employmentGroup := router.Group(prefix + "/employment")
 
 	{
-		// Employee type
+		// =====================================================
+		// Employee Type
+		// =====================================================
 		employmentGroup.POST("/create", middlewares.AuthMiddleware(), func(ctx *gin.Context) {
 			controller.CreateEmployeeType(ctx)
 		})
@@ -20,7 +22,9 @@ func EmploymentRoutes(router *gin.Engine, controller *employmentController, pref
 			controller.GetEmployeeTypes(ctx)
 		})
 
-		// Employement status
+		// =====================================================
+		// Employment status
+		// =====================================================
 		employmentGroup.POST("/create/employment-status", middlewares.AuthMiddleware(), func(ctx *gin.Context) {
 			controller.CreateEmploymentStatus(ctx)
 		})
@@ -30,5 +34,6 @@ func EmploymentRoutes(router *gin.Engine, controller *employmentController, pref
 		employmentGroup.GET("/employment-statuses", middlewares.AuthMiddleware(), func(ctx *gin.Context) {
 			controller.GetEmploymentStatuses(ctx)
 		})
+
 	}
 }

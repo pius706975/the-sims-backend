@@ -15,6 +15,9 @@ func NewRepo(db *gorm.DB) *employmentRepo {
 	return &employmentRepo{db}
 }
 
+// =====================================================
+// Employee Type
+// =====================================================
 func (repo *employmentRepo) CreateEmployeeType(data *models.EmployeeType) (*models.EmployeeType, error) {
 
 	if err := repo.db.Create(data).Error; err != nil {
@@ -59,6 +62,23 @@ func (repo *employmentRepo) GetEmployeeTypes() (*models.EmployeeTypes, error) {
 	return &data, nil
 }
 
+func (repo *employmentRepo) GetEmployeeTypeById(id string) (*models.EmployeeType, error) {
+	var data models.EmployeeType
+
+	err := repo.db.
+		Where("employee_type_id = ?", id).
+		First(&data).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &data, nil
+}
+
 func (repo *employmentRepo) GetExistingEmployeeType(id, name string) (*models.EmployeeType, error) {
 	var existingEmployeeType models.EmployeeType
 
@@ -73,7 +93,9 @@ func (repo *employmentRepo) GetExistingEmployeeType(id, name string) (*models.Em
 	return &existingEmployeeType, nil
 }
 
+// =====================================================
 // Employment status
+// =====================================================
 func (repo *employmentRepo) CreateEmploymentStatus(data *models.EmploymentStatus) (*models.EmploymentStatus, error) {
 
 	if err := repo.db.Create(data).Error; err != nil {
@@ -102,7 +124,9 @@ func (repo *employmentRepo) DeleteEmploymentStatus(id string) error {
 func (repo *employmentRepo) GetExistingEmploymentStatus(id, name string) (*models.EmploymentStatus, error) {
 	var existingEmploymentStatus models.EmploymentStatus
 
-	err := repo.db.Where("employment_status_id = ? OR employment_status_name = ?", id, name).First(&existingEmploymentStatus).Error
+	err := repo.db.
+		Where("employment_status_id = ? OR employment_status_name = ?", id, name).
+		First(&existingEmploymentStatus).Error
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -127,6 +151,23 @@ func (repo *employmentRepo) GetEmploymentStatuses() (*models.EmploymentStatuses,
 
 	if len(data) <= 0 {
 		return nil, errors.New("Employment Statuses is empty")
+	}
+
+	return &data, nil
+}
+
+func (repo *employmentRepo) GetEmploymentStatusById(id string) (*models.EmploymentStatus, error) {
+	var data models.EmploymentStatus
+
+	err := repo.db.
+		Where("employment_status_id = ?", id).
+		First(&data).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
 	}
 
 	return &data, nil

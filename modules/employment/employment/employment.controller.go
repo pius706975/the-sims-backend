@@ -17,6 +17,10 @@ func NewController(service interfaces.EmploymentService) *employmentController {
 	return &employmentController{service}
 }
 
+// =====================================================
+// Employee Type
+// =====================================================
+
 // CreateEmployeeType godoc
 // @Summary Create employee type
 // @Description Create a new employee type with manual ID and name of the type
@@ -43,12 +47,13 @@ func (controller *employmentController) CreateEmployeeType(ctx *gin.Context) {
 
 	err := ctx.ShouldBindJSON(&employeeTypeData)
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": "Failed to parse request"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse request"})
+		return
 	}
 
 	_, err = govalidator.ValidateStruct(&employeeTypeData)
 	if err != nil {
-		ctx.JSON(400, gin.H{"message": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -93,7 +98,10 @@ func (controller *employmentController) GetEmployeeTypes(ctx *gin.Context) {
 	ctx.JSON(status, responseData)
 }
 
-// ===========================================
+// =====================================================
+// Employment status
+// =====================================================
+
 // CreateEmploymentStatus godoc
 // @Summary Create employment status
 // @Description Create a new employment status with manual ID and name of the type
@@ -120,12 +128,12 @@ func (controller *employmentController) CreateEmploymentStatus(ctx *gin.Context)
 
 	err := ctx.ShouldBindJSON(&employmentStatusData)
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": "Failed to parse request"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse request"})
 	}
 
 	_, err = govalidator.ValidateStruct(&employmentStatusData)
 	if err != nil {
-		ctx.JSON(400, gin.H{"message": err.Error()})
+		ctx.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
 		return
 	}
 

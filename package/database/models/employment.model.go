@@ -22,8 +22,8 @@ type Employee struct {
 	EmploymentStatusID string           `gorm:"type:varchar(50);not null" json:"employment_status_id,omitempty"`
 	EmploymentStatus   EmploymentStatus `gorm:"foreignKey:EmploymentStatusID;references:ID"`
 
-	JoinDate time.Time `json:"join_date" valid:"-"`
-	EndDate  time.Time `json:"end_date" valid:"-"`
+	JoinDate *time.Time `json:"join_date" valid:"-"`
+	EndDate  *time.Time `json:"end_date" valid:"-"`
 
 	IsActivated bool      `gorm:"default: true" json:"is_activated,omitempty" valid:"-"`
 	CreatedAt   time.Time `json:"created_at" valid:"-"`
@@ -77,6 +77,26 @@ type CreateEmployeeTypeRequest struct {
 }
 
 type CreateEmploymentStatusRequest struct {
-	ID               string `json:"employment_status_id"`
+	ID                   string `json:"employment_status_id"`
 	EmploymentStatusName string `json:"employment_status_name"`
+}
+
+type CreateEmployeeRequest struct {
+	EmployeeNumber     string `json:"employee_number" binding:"required"`
+	FullName           string `json:"full_name" binding:"required"`
+	Gender             string `json:"gender" binding:"required"`
+	BirthPlace         string `json:"birth_place" binding:"required"`
+	BirthDate          string `json:"birth_date" binding:"required"`
+	Religion           string `json:"religion" binding:"required"`
+	MaritalStatus      string `json:"marital_status" binding:"required"`
+	Address            string `json:"address" binding:"required"`
+	Phone              string `json:"phone" binding:"required"`
+	Email              string `json:"email" binding:"required"`
+	IdentifyCardNumber int64  `json:"identify_card_number" binding:"required"`
+
+	EmployeeTypeID     string `json:"employee_type_id" binding:"required"`
+	EmploymentStatusID string `json:"employment_status_id" binding:"required"`
+
+	JoinDate string `json:"join_date" binding:"required"`
+	EndDate  string `json:"end_date"`
 }

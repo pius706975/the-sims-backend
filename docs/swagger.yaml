@@ -6,6 +6,54 @@ definitions:
     required:
     - name
     type: object
+  models.CreateEmployeeRequest:
+    properties:
+      address:
+        type: string
+      birth_date:
+        type: string
+      birth_place:
+        type: string
+      email:
+        type: string
+      employee_number:
+        type: string
+      employee_type_id:
+        type: string
+      employment_status_id:
+        type: string
+      end_date:
+        type: string
+      full_name:
+        type: string
+      gender:
+        type: string
+      identify_card_number:
+        type: integer
+      join_date:
+        type: string
+      marital_status:
+        type: string
+      phone:
+        type: string
+      religion:
+        type: string
+    required:
+    - address
+    - birth_date
+    - birth_place
+    - email
+    - employee_number
+    - employee_type_id
+    - employment_status_id
+    - full_name
+    - gender
+    - identify_card_number
+    - join_date
+    - marital_status
+    - phone
+    - religion
+    type: object
   models.CreateEmployeeTypeRequest:
     properties:
       employee_type_id:
@@ -23,6 +71,85 @@ definitions:
   models.CreateNewAccessTokenRequest:
     properties:
       refresh_token:
+        type: string
+    type: object
+  models.Employee:
+    properties:
+      address:
+        type: string
+      birth_date:
+        type: string
+      birth_place:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: string
+      email:
+        type: string
+      employee_id:
+        type: string
+      employee_number:
+        type: string
+      employee_type_id:
+        type: string
+      employeeType:
+        $ref: '#/definitions/models.EmployeeType'
+      employment_status_id:
+        type: string
+      employmentStatus:
+        $ref: '#/definitions/models.EmploymentStatus'
+      end_date:
+        type: string
+      full_name:
+        type: string
+      gender:
+        type: string
+      identify_card_number:
+        type: integer
+      is_activated:
+        type: boolean
+      join_date:
+        type: string
+      marital_status:
+        type: string
+      phone:
+        type: string
+      religion:
+        type: string
+      updated_at:
+        type: string
+      updated_by:
+        type: string
+    type: object
+  models.EmployeeType:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: string
+      employee_type_id:
+        type: string
+      employee_type_name:
+        type: string
+      updated_at:
+        type: string
+      updated_by:
+        type: string
+    type: object
+  models.EmploymentStatus:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: string
+      employment_status_id:
+        type: string
+      employment_status_name:
+        type: string
+      updated_at:
+        type: string
+      updated_by:
         type: string
     type: object
   models.SignInRequest:
@@ -105,6 +232,51 @@ paths:
       summary: Login as an authenticated user
       tags:
       - Authentication
+  /api/employee/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new employee with join_date and end_date in format YYYY-MM-DD
+      parameters:
+      - description: Employee data
+        in: body
+        name: employeeData
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateEmployeeRequest'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Employee'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create employee
+      tags:
+      - Employee
   /api/employment/create:
     post:
       consumes:
@@ -477,7 +649,4 @@ paths:
       summary: Register a new user
       tags:
       - Users
-securityDefinitions:
-  BasicAuth:
-    type: basic
 swagger: "2.0"

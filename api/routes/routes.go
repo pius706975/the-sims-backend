@@ -3,7 +3,8 @@ package routes
 import (
 	_ "github.com/pius706975/the-sims-backend/docs"
 	"github.com/pius706975/the-sims-backend/modules/auth"
-	"github.com/pius706975/the-sims-backend/modules/employment"
+	"github.com/pius706975/the-sims-backend/modules/employment/employee"
+	"github.com/pius706975/the-sims-backend/modules/employment/employment"
 	"github.com/pius706975/the-sims-backend/modules/role"
 	"github.com/pius706975/the-sims-backend/modules/user"
 
@@ -33,6 +34,7 @@ func RouteApp(router *gin.Engine, db *gorm.DB) error {
 	user.UserRoutesModule(router, db, APIPrefix)
 	auth.AuthRoutesModule(router, db, APIPrefix)
 	employment.EmploymentModule(router, db, APIPrefix)
+	employee.EmployeeModule(router, db, APIPrefix)
 
 	return nil
 }

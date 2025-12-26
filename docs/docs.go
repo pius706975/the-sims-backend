@@ -98,6 +98,74 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/employee/create": {
+            "post": {
+                "description": "Create a new employee with join_date and end_date in format YYYY-MM-DD",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Create employee",
+                "parameters": [
+                    {
+                        "description": "Employee data",
+                        "name": "employeeData",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateEmployeeRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Employee"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/employment/create": {
             "post": {
                 "description": "Create a new employee type with manual ID and name of the type",
@@ -675,6 +743,72 @@ const docTemplate = `{
                 }
             }
         },
+        "models.CreateEmployeeRequest": {
+            "type": "object",
+            "required": [
+                "address",
+                "birth_date",
+                "birth_place",
+                "email",
+                "employee_number",
+                "employee_type_id",
+                "employment_status_id",
+                "full_name",
+                "gender",
+                "identify_card_number",
+                "join_date",
+                "marital_status",
+                "phone",
+                "religion"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "birth_date": {
+                    "type": "string"
+                },
+                "birth_place": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "employee_number": {
+                    "type": "string"
+                },
+                "employee_type_id": {
+                    "type": "string"
+                },
+                "employment_status_id": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "identify_card_number": {
+                    "type": "integer"
+                },
+                "join_date": {
+                    "type": "string"
+                },
+                "marital_status": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "religion": {
+                    "type": "string"
+                }
+            }
+        },
         "models.CreateEmployeeTypeRequest": {
             "type": "object",
             "properties": {
@@ -705,6 +839,126 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Employee": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "birth_date": {
+                    "type": "string"
+                },
+                "birth_place": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "employeeType": {
+                    "$ref": "#/definitions/models.EmployeeType"
+                },
+                "employee_id": {
+                    "type": "string"
+                },
+                "employee_number": {
+                    "type": "string"
+                },
+                "employee_type_id": {
+                    "type": "string"
+                },
+                "employmentStatus": {
+                    "$ref": "#/definitions/models.EmploymentStatus"
+                },
+                "employment_status_id": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "identify_card_number": {
+                    "type": "integer"
+                },
+                "is_activated": {
+                    "type": "boolean"
+                },
+                "join_date": {
+                    "type": "string"
+                },
+                "marital_status": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "religion": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EmployeeType": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "employee_type_id": {
+                    "type": "string"
+                },
+                "employee_type_name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EmploymentStatus": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "employment_status_id": {
+                    "type": "string"
+                },
+                "employment_status_name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by": {
+                    "type": "string"
+                }
+            }
+        },
         "models.SignInRequest": {
             "type": "object",
             "properties": {
@@ -729,11 +983,6 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
-        }
-    },
-    "securityDefinitions": {
-        "BasicAuth": {
-            "type": "basic"
         }
     },
     "externalDocs": {

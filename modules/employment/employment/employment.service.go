@@ -16,6 +16,9 @@ func NewService(repo interfaces.EmploymentRepo) *employmentService {
 	return &employmentService{repo}
 }
 
+// =====================================================
+// Employee Type
+// =====================================================
 func (service *employmentService) CreateEmployeeType(employeeTypeData *models.EmployeeType, decodedUsername string) (gin.H, int) {
 
 	employeeTypeData.CreatedAt = utils.GetCurrentTime()
@@ -23,7 +26,10 @@ func (service *employmentService) CreateEmployeeType(employeeTypeData *models.Em
 
 	existingEmployeeType, err := service.repo.GetExistingEmployeeType(employeeTypeData.ID, employeeTypeData.EmployeeTypeName)
 	if err != nil {
-		return gin.H{"status": 500, "message": err.Error()}, 500
+		return gin.H{
+			"status":  500,
+			"message": err.Error(),
+		}, 500
 	}
 	if existingEmployeeType != nil {
 		return gin.H{
@@ -87,7 +93,9 @@ func (service *employmentService) GetEmployeeTypes() (gin.H, int) {
 	}, 200
 }
 
+// =====================================================
 // Employment status
+// =====================================================
 func (service *employmentService) CreateEmploymentStatus(employmentStatusData *models.EmploymentStatus, decodedUsername string) (gin.H, int) {
 
 	employmentStatusData.CreatedAt = utils.GetCurrentTime()
