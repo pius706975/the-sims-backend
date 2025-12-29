@@ -12,7 +12,7 @@ func EmployeeRoutes(router *gin.Engine, controller *employeeController, prefix s
 		employeeGroup.POST("/create", middlewares.AuthMiddleware(), func(ctx *gin.Context) {
 			controller.CreateEmployee(ctx)
 		})
-		employeeGroup.GET("/employees", func(ctx *gin.Context) {
+		employeeGroup.GET("/employees", middlewares.AuthMiddleware(), func(ctx *gin.Context) {
 			controller.GetEmployees(ctx)
 		})
 	}

@@ -16,6 +16,7 @@ var initCommand = cobra.Command{
 func init() {
 	initCommand.AddCommand(serve.ServeCMD)
 	initCommand.AddCommand(database.MigrationCMD)
+	initCommand.AddCommand(database.SeedCMD)
 	initCommand.AddCommand(customcmd.CreateSuperUserCMD)
 	initCommand.AddCommand(customcmd.CreateMigrationCMD)
 }

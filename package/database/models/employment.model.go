@@ -100,6 +100,8 @@ func (EmploymentStatus) TableName() string {
 	return "employment_statuses"
 }
 
+// Employee position
+
 // Struct for swagger
 type CreateEmployeeTypeRequest struct {
 	ID               string `json:"employee_type_id"`
