@@ -73,85 +73,6 @@ definitions:
       refresh_token:
         type: string
     type: object
-  models.Employee:
-    properties:
-      address:
-        type: string
-      birth_date:
-        type: string
-      birth_place:
-        type: string
-      created_at:
-        type: string
-      created_by:
-        type: string
-      email:
-        type: string
-      employee_id:
-        type: string
-      employee_number:
-        type: string
-      employee_type_id:
-        type: string
-      employeeType:
-        $ref: '#/definitions/models.EmployeeType'
-      employment_status_id:
-        type: string
-      employmentStatus:
-        $ref: '#/definitions/models.EmploymentStatus'
-      end_date:
-        type: string
-      full_name:
-        type: string
-      gender:
-        type: string
-      identify_card_number:
-        type: integer
-      is_activated:
-        type: boolean
-      join_date:
-        type: string
-      marital_status:
-        type: string
-      phone:
-        type: string
-      religion:
-        type: string
-      updated_at:
-        type: string
-      updated_by:
-        type: string
-    type: object
-  models.EmployeeType:
-    properties:
-      created_at:
-        type: string
-      created_by:
-        type: string
-      employee_type_id:
-        type: string
-      employee_type_name:
-        type: string
-      updated_at:
-        type: string
-      updated_by:
-        type: string
-    type: object
-  models.EmploymentStatus:
-    properties:
-      created_at:
-        type: string
-      created_by:
-        type: string
-      employment_status_id:
-        type: string
-      employment_status_name:
-        type: string
-      updated_at:
-        type: string
-      updated_by:
-        type: string
-    type: object
   models.SignInRequest:
     properties:
       email:
@@ -254,27 +175,36 @@ paths:
       responses:
         "201":
           description: Created
-          schema:
-            $ref: '#/definitions/models.Employee'
         "400":
           description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "401":
           description: Unauthorized
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "500":
           description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
       summary: Create employee
+      tags:
+      - Employee
+  /api/employee/employees:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all employees
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get all employees
       tags:
       - Employee
   /api/employment/create:

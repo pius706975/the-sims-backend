@@ -37,8 +37,10 @@ type EmploymentService interface {
 type EmployeeRepo interface {
 	CreateEmployee(employeeData *models.Employee) (*models.Employee, error)
 	GetExistingEmployee(employeeNumber string) (*models.Employee, error)
+	GetEmployees() ([]models.EmployeeRawResponse, error)
 }
 
 type EmployeeService interface {
 	CreateEmployee(employeeData *models.Employee, decodedCreatorName string) (gin.H, int)
+	GetEmployees() (gin.H, int)
 }

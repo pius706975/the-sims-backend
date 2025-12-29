@@ -123,37 +123,51 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/models.Employee"
-                        }
+                        "description": "Created"
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
+                        "description": "Bad Request"
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
+                        "description": "Unauthorized"
                     },
                     "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/employee/employees": {
+            "get": {
+                "description": "Retrieve all employees",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Get all employees",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -827,126 +841,6 @@
             "type": "object",
             "properties": {
                 "refresh_token": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Employee": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "birth_date": {
-                    "type": "string"
-                },
-                "birth_place": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "created_by": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "employeeType": {
-                    "$ref": "#/definitions/models.EmployeeType"
-                },
-                "employee_id": {
-                    "type": "string"
-                },
-                "employee_number": {
-                    "type": "string"
-                },
-                "employee_type_id": {
-                    "type": "string"
-                },
-                "employmentStatus": {
-                    "$ref": "#/definitions/models.EmploymentStatus"
-                },
-                "employment_status_id": {
-                    "type": "string"
-                },
-                "end_date": {
-                    "type": "string"
-                },
-                "full_name": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "identify_card_number": {
-                    "type": "integer"
-                },
-                "is_activated": {
-                    "type": "boolean"
-                },
-                "join_date": {
-                    "type": "string"
-                },
-                "marital_status": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "religion": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "updated_by": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.EmployeeType": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "created_by": {
-                    "type": "string"
-                },
-                "employee_type_id": {
-                    "type": "string"
-                },
-                "employee_type_name": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "updated_by": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.EmploymentStatus": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "created_by": {
-                    "type": "string"
-                },
-                "employment_status_id": {
-                    "type": "string"
-                },
-                "employment_status_name": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "updated_by": {
                     "type": "string"
                 }
             }

@@ -25,10 +25,10 @@ func NewController(service interfaces.EmployeeService) *employeeController {
 // @Produce json
 // @Param employeeData body models.CreateEmployeeRequest true "Employee data"
 // @Param Authorization header string true "Authorization token"
-// @Success 201 {object} models.Employee
-// @Failure 400 {object} map[string]string
-// @Failure 401 {object} map[string]string
-// @Failure 500 {object} map[string]string
+// @Success 201
+// @Failure 400
+// @Failure 401
+// @Failure 500
 // @Router /api/employee/create [post]
 func (controller *employeeController) CreateEmployee(ctx *gin.Context) {
 	ctx.Header("Content-type", "application/json")
@@ -81,5 +81,21 @@ func (controller *employeeController) CreateEmployee(ctx *gin.Context) {
 	}
 
 	responseData, status := controller.service.CreateEmployee(&employeeData, name.(string))
+	ctx.JSON(status, responseData)
+}
+
+// GetEmployees godoc
+// @Summary Get all employees
+// @Description Retrieve all employees
+// @Tags Employee
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Authorization token"
+// @Success 200
+// @Failure 404
+// @Failure 500
+// @Router /api/employee/employees [get]
+func (controller *employeeController) GetEmployees(ctx *gin.Context) {
+	responseData, status := controller.service.GetEmployees()
 	ctx.JSON(status, responseData)
 }

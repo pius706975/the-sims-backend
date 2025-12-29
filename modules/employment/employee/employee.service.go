@@ -12,7 +12,6 @@ type employeeService struct {
 	employmentRepo interfaces.EmploymentRepo
 }
 
-
 func NewService(
 	employeeRepo interfaces.EmployeeRepo,
 	employmentRepo interfaces.EmploymentRepo,
@@ -22,7 +21,6 @@ func NewService(
 		employmentRepo: employmentRepo,
 	}
 }
-
 
 func (service *employeeService) CreateEmployee(employeeData *models.Employee, decodedUsername string) (gin.H, int) {
 
@@ -93,4 +91,21 @@ func (service *employeeService) CreateEmployee(employeeData *models.Employee, de
 		"message": "Employee created successfully",
 		"data":    newData,
 	}, 201
+}
+
+func (service *employeeService) GetEmployees() (gin.H, int) {
+	employees, err := service.employeeRepo.GetEmployees()
+
+	if err != nil {
+		return gin.H{
+			"status":  400,
+			"message": err.Error(),
+		}, 400
+	}
+
+	return gin.H{
+		"status":  200,
+		"message": "All employees fetched successfully",
+		"data":    employees,
+	}, 200
 }

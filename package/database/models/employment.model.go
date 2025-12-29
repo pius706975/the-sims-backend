@@ -38,6 +38,36 @@ func (Employee) TableName() string {
 	return "employees"
 }
 
+type EmployeeRawResponse struct {
+	EmployeeID         string    `json:"employee_id"`
+	EmployeeNumber     string    `json:"employee_number"`
+	FullName           string    `json:"full_name"`
+	Gender             string    `json:"gender"`
+	BirthPlace         string    `json:"birth_place"`
+	BirthDate          time.Time `json:"birth_date"`
+	Religion           string    `json:"religion"`
+	MaritalStatus      string    `json:"marital_status"`
+	Address            string    `json:"address"`
+	Phone              string    `json:"phone"`
+	Email              string    `json:"email"`
+	IdentifyCardNumber int64     `json:"identify_card_number"`
+
+	EmployeeTypeID   string `json:"employee_type_id"`
+	EmployeeTypeName string `json:"employee_type_name"`
+
+	EmploymentStatusID   string `json:"employment_status_id"`
+	EmploymentStatusName string `json:"employment_status_name"`
+
+	JoinDate    *time.Time `json:"join_date"`
+	EndDate     *time.Time `json:"end_date"`
+	IsActivated bool       `json:"is_activated"`
+
+	CreatedAt time.Time `json:"created_at"`
+	CreatedBy *string    `json:"created_by"`
+	UpdatedAt *time.Time `json:"updated_at"`
+	UpdatedBy *string    `json:"updated_by"`
+}
+
 // Employee Type
 type EmployeeType struct {
 	ID               string    `gorm:"type:varchar(50);primaryKey;column:employee_type_id" json:"employee_type_id,omitempty"`
