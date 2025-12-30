@@ -41,3 +41,27 @@ CREATE TABLE employees (
     CONSTRAINT fk_employee_type FOREIGN KEY(employee_type_id) REFERENCES employee_types(employee_type_id),
     CONSTRAINT fk_employment_status FOREIGN KEY(employment_status_id) REFERENCES employment_statuses(employment_status_id)
 );
+
+CREATE TABLE positions (
+    position_id VARCHAR(50) PRIMARY KEY NOT NULL,
+    position_name VARCHAR NOT NULL,
+    created_at TIMESTAMP,
+    created_by VARCHAR,
+    updated_at TIMESTAMP,
+    updated_by VARCHAR
+);
+
+CREATE TABLE employee_positions (
+    employee_positions_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    employee_id UUID NOT NULL,
+    position_id VARCHAR NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP,
+    created_by VARCHAR,
+    updated_at TIMESTAMP,
+    updated_by VARCHAR,
+    CONSTRAINT fk_employee FOREIGN KEY(employee_id) REFERENCES employees(employee_id),
+    CONSTRAINT fk_position FOREIGN KEY(position_id) REFERENCES positions(position_id)
+);
