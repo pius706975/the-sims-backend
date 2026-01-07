@@ -2,6 +2,9 @@ package models
 
 import "time"
 
+// =======================================
+// Employee
+// =======================================
 type Employee struct {
 	ID                 string `gorm:"primarykey; type:uuid; default:uuid_generate_v4(); column:employee_id" json:"employee_id,omitempty" valid:"-"`
 	EmployeeNumber     string `gorm:"not null" json:"employee_number,omitempty" valid:"type(string), required~EmployeeNumber is required"`
@@ -62,13 +65,15 @@ type EmployeeRawResponse struct {
 	EndDate     *time.Time `json:"end_date"`
 	IsActivated bool       `json:"is_activated"`
 
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time  `json:"created_at"`
 	CreatedBy *string    `json:"created_by"`
 	UpdatedAt *time.Time `json:"updated_at"`
 	UpdatedBy *string    `json:"updated_by"`
 }
 
+// =======================================
 // Employee Type
+// =======================================
 type EmployeeType struct {
 	ID               string    `gorm:"type:varchar(50);primaryKey;column:employee_type_id" json:"employee_type_id,omitempty"`
 	EmployeeTypeName string    `gorm:"not null" json:"employee_type_name,omitempty" valid:"type(string), required~EmployeeTypeName is required"`
@@ -84,7 +89,9 @@ func (EmployeeType) TableName() string {
 	return "employee_types"
 }
 
+// =======================================
 // Employment Status
+// =======================================
 type EmploymentStatus struct {
 	ID                   string    `gorm:"type:varchar(50);primaryKey;column:employment_status_id" json:"employment_status_id,omitempty"`
 	EmploymentStatusName string    `gorm:"not null" json:"employment_status_name,omitempty" valid:"type(string), required~EmploymentStatusName is required"`
@@ -100,9 +107,42 @@ func (EmploymentStatus) TableName() string {
 	return "employment_statuses"
 }
 
+// =======================================
 // Employee position
+// =======================================
+type Position struct {
+	ID           string    `gorm:"type:varchar(50);primaryKey;column:position_id" json:"position_id,omitempty"`
+	PositionName string    `gorm:"not null" json:"position_name,omitempty" valid:"type(string), required~EmploymentStatusName is required"`
+	CreatedAt    time.Time `json:"created_at" valid:"-"`
+	CreatedBy    string    `gorm:"default:null" json:"created_by,omitempty" valid:"type(string)"`
+	UpdatedAt    time.Time `gorm:"default:null" json:"updated_at" valid:"-"`
+	UpdatedBy    string    `gorm:"default:null" json:"updated_by,omitempty" valid:"type(string)"`
+}
 
+type Positions []Position
+
+func (Position) TableName() string {
+	return "positions"
+}
+
+type EmployeePosition struct {
+	ID string `gorm:"type:varchar(50);primaryKey;column:employee_positions_id" json:"employee_positions_id,omitempty"`
+
+	EmployeeID string   `gorm:"type:uuidv4;not null" json:"employee_id,omitempty" valid:"uuidv4"`
+	Employee   Employee `gorm:"foreignKey:EmployeeID;references:ID"`
+
+	PositionID string   `gorm:"type:varchar(50);not null" json:"position_id,omitempty"`
+	Position   Position `gorm:"foreignKey:PositionID;references:ID"`
+
+	CreatedAt time.Time `json:"created_at" valid:"-"`
+	CreatedBy string    `gorm:"default:null" json:"created_by,omitempty" valid:"type(string)"`
+	UpdatedAt time.Time `gorm:"default:null" json:"updated_at" valid:"-"`
+	UpdatedBy string    `gorm:"default:null" json:"updated_by,omitempty" valid:"type(string)"`
+}
+
+// =======================================
 // Struct for swagger
+// =======================================
 type CreateEmployeeTypeRequest struct {
 	ID               string `json:"employee_type_id"`
 	EmployeeTypeName string `json:"employee_type_name"`

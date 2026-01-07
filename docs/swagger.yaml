@@ -184,6 +184,34 @@ paths:
       summary: Create employee
       tags:
       - Employee
+  /api/employee/detail/{employee_id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve an employee by id
+      parameters:
+      - description: Employee ID
+        in: path
+        name: employee_id
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get an employee detail
+      tags:
+      - Employee
   /api/employee/employees:
     get:
       consumes:

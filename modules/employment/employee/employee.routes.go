@@ -15,5 +15,8 @@ func EmployeeRoutes(router *gin.Engine, controller *employeeController, prefix s
 		employeeGroup.GET("/employees", middlewares.AuthMiddleware(), func(ctx *gin.Context) {
 			controller.GetEmployees(ctx)
 		})
+		employeeGroup.GET("/detail/:employee_id", middlewares.AuthMiddleware(), func(ctx *gin.Context) {
+			controller.GetEmployeeById(ctx)
+		})
 	}
 }

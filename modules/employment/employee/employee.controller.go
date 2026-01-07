@@ -99,3 +99,23 @@ func (controller *employeeController) GetEmployees(ctx *gin.Context) {
 	responseData, status := controller.service.GetEmployees()
 	ctx.JSON(status, responseData)
 }
+
+// GetEmployeeById godoc
+// @Summary Get an employee detail
+// @Description Retrieve an employee by id
+// @Tags Employee
+// @Accept json
+// @Produce json
+// @Param employee_id path string true "Employee ID"
+// @Param Authorization header string true "Authorization token"
+// @Success 200
+// @Failure 404
+// @Failure 500
+// @Router /api/employee/detail/{employee_id} [get]
+func (controller *employeeController) GetEmployeeById(ctx *gin.Context) {
+	id := ctx.Param("employee_id")
+
+	responseData, status := controller.service.GetEmployeeById(id)
+
+	ctx.JSON(status, responseData)
+}

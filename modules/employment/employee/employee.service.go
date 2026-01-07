@@ -93,6 +93,23 @@ func (service *employeeService) CreateEmployee(employeeData *models.Employee, de
 	}, 201
 }
 
+func (service *employeeService) GetEmployeeById(id string) (gin.H, int) {
+	employee, err := service.employeeRepo.GetEmployeeById(id)
+
+	if err != nil {
+		return gin.H{
+			"status": 400,
+			"message": err.Error(),
+		}, 400
+	}
+
+	return gin.H{
+		"status": 200,
+		"message": "Employee fetched successfully",
+		"data": employee,
+	}, 200
+}
+
 func (service *employeeService) GetEmployees() (gin.H, int) {
 	employees, err := service.employeeRepo.GetEmployees()
 

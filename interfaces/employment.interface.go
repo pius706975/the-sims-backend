@@ -5,6 +5,9 @@ import (
 	"github.com/pius706975/the-sims-backend/package/database/models"
 )
 
+// =================================
+// Employment
+// =================================
 type EmploymentRepo interface {
 	// Employee Type
 	CreateEmployeeType(employeeTypeData *models.EmployeeType) (*models.EmployeeType, error)
@@ -33,14 +36,22 @@ type EmploymentService interface {
 	GetEmploymentStatuses() (gin.H, int)
 }
 
+// =================================
 // Employee
+// =================================
 type EmployeeRepo interface {
 	CreateEmployee(employeeData *models.Employee) (*models.Employee, error)
 	GetExistingEmployee(employeeNumber string) (*models.Employee, error)
 	GetEmployees() ([]models.EmployeeRawResponse, error)
+	GetEmployeeById(id string) (*models.EmployeeRawResponse, error)
 }
 
 type EmployeeService interface {
 	CreateEmployee(employeeData *models.Employee, decodedCreatorName string) (gin.H, int)
 	GetEmployees() (gin.H, int)
+	GetEmployeeById(id string) (gin.H, int)
 }
+
+// =================================
+// Position
+// =================================
