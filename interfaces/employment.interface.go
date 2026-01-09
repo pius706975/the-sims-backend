@@ -55,3 +55,16 @@ type EmployeeService interface {
 // =================================
 // Position
 // =================================
+type PositionRepo interface {
+	CreatePosition(positionData *models.Position) (*models.Position, error)
+	GetExistingPosition(id, name string) (*models.Position, error)
+	GetPositions() (*models.Positions, error)
+	GetPositionById(id string) (*models.Position, error)
+	DeletePosition(id string) error
+}
+
+type PositionService interface {
+	CreatePosition(positionData *models.Position, decodedCreatorName string) (gin.H, int)
+	GetPositions() (gin.H, int)
+	DeletePosition(id string) (gin.H, int)
+}

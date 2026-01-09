@@ -172,3 +172,8 @@ type CreateEmployeeRequest struct {
 	JoinDate string `json:"join_date" binding:"required"`
 	EndDate  string `json:"end_date"`
 }
+
+type CreatePositionRequest struct {
+	ID           string `json:"position_id" binding:"required"`
+	PositionName string `json:"position_name" binding:"required"`
+}

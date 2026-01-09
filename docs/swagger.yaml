@@ -73,6 +73,16 @@ definitions:
       refresh_token:
         type: string
     type: object
+  models.CreatePositionRequest:
+    properties:
+      position_id:
+        type: string
+      position_name:
+        type: string
+    required:
+    - position_id
+    - position_name
+    type: object
   models.SignInRequest:
     properties:
       email:
@@ -399,6 +409,88 @@ paths:
       summary: Get all employment statuses
       tags:
       - Employment Status
+  /api/position/create-position:
+    post:
+      consumes:
+      - application/json
+      description: Create a new position with manual ID and name of the type
+      parameters:
+      - description: Position data
+        in: body
+        name: positionData
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreatePositionRequest'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      summary: Create position
+      tags:
+      - Employee Position
+  /api/position/delete/{position_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a position by id
+      parameters:
+      - description: Position ID
+        in: path
+        name: position_id
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Delete a position
+      tags:
+      - Employee Position
+  /api/position/positions:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all position
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get all positions
+      tags:
+      - Employee Position
   /api/role:
     get:
       consumes:

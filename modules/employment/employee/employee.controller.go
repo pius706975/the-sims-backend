@@ -50,7 +50,6 @@ func (controller *employeeController) CreateEmployee(ctx *gin.Context) {
 		return
 	}
 
-	// parse join_date & end_date
 	joinDate, err := utils.ParseDate(req.JoinDate)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid join_date format. Use YYYY-MM-DD"})

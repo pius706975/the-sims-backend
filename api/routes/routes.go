@@ -5,6 +5,7 @@ import (
 	"github.com/pius706975/the-sims-backend/modules/auth"
 	"github.com/pius706975/the-sims-backend/modules/employment/employee"
 	"github.com/pius706975/the-sims-backend/modules/employment/employment"
+	"github.com/pius706975/the-sims-backend/modules/employment/position"
 	"github.com/pius706975/the-sims-backend/modules/role"
 	"github.com/pius706975/the-sims-backend/modules/user"
 
@@ -35,6 +36,8 @@ func RouteApp(router *gin.Engine, db *gorm.DB) error {
 	auth.AuthRoutesModule(router, db, APIPrefix)
 	employment.EmploymentModule(router, db, APIPrefix)
 	employee.EmployeeModule(router, db, APIPrefix)
+	position.EmployeePosition(router, db, APIPrefix)
+	
 
 	return nil
 }
