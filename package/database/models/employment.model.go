@@ -140,6 +140,12 @@ type EmployeePosition struct {
 	UpdatedBy string    `gorm:"default:null" json:"updated_by,omitempty" valid:"type(string)"`
 }
 
+type EmployeePositions []EmployeePosition
+
+func (EmployeePosition) TableName() string {
+	return "employee_positions"
+}
+
 // =======================================
 // Struct for swagger
 // =======================================

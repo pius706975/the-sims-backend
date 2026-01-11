@@ -34,6 +34,7 @@ CREATE TABLE employees (
     is_activated BOOLEAN DEFAULT TRUE,
     employee_type_id VARCHAR,
     employment_status_id VARCHAR,
+    is_deleted BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP,
     created_by VARCHAR,
     updated_at TIMESTAMP,
