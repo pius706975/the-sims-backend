@@ -118,3 +118,36 @@ var EmployeeSeed = models.Employees{
 		CreatedBy:          "Super Admin Pius",
 	},
 }
+
+var PositionSeed = models.Positions{
+	{
+		ID: "GR",
+		PositionName: "Guru",
+		CreatedBy: "Super Admin Pius",
+	},
+	{
+		ID: "PO",
+		PositionName: "Pembina Osis",
+		CreatedBy: "Super Admin Pius",
+	},
+	{
+		ID: "TU",
+		PositionName: "Tata Usaha",
+		CreatedBy: "Super Admin Pius",
+	},
+	{
+		ID: "BD",
+		PositionName: "Bendahara",
+		CreatedBy: "Super Admin Pius",
+	},
+	{
+		ID: "WKS",
+		PositionName: "Wakil Kepala Sekolah",
+		CreatedBy: "Super Admin Pius",
+	},
+	{
+		ID: "KS",
+		PositionName: "Kepala Sekolah",
+		CreatedBy: "Super Admin Pius",
+	},
+}

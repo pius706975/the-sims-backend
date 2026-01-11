@@ -50,6 +50,11 @@ func seedDown(db *gorm.DB) error {
 			name:  models.Employee{}.TableName(),
 			model: models.Employee{},
 		},
+
+		{
+			name:  models.Position{}.TableName(),
+			model: models.Position{},
+		},
 	}
 
 	for _, data := range seedModel {
@@ -82,6 +87,12 @@ func seedUp(db *gorm.DB) error {
 			name:  "employee",
 			model: seeders.EmployeeSeed,
 			size:  cap(seeders.EmployeeSeed),
+		},
+
+		{
+			name:  "position",
+			model: seeders.PositionSeed,
+			size:  cap(seeders.PositionSeed),
 		},
 	}
 
