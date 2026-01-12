@@ -10,11 +10,11 @@ import (
 )
 
 type Config struct {
-	Port    string
-	BaseURL string
-	Mode    string
-	Debug   string
-	// Origins        string
+	Port           string
+	BaseURL        string
+	CookieDomain   string
+	Mode           string
+	Debug          string
 	AllowedOrigins []string
 
 	DBPort     string
@@ -43,18 +43,10 @@ func LoadConfig() *Config {
 			log.Fatalf("Error loading .env file")
 		}
 
-		// origins := os.Getenv("ALLOWED_ORIGINS")
-		// var allowedOrigins []string
-
-		// if origins != "" {
-		// 	for _, origin := range strings.Split(origins, ",") {
-		// 		allowedOrigins = append(allowedOrigins, strings.TrimSpace(origin))
-		// 	}
-		// }
-
 		envConfig = &Config{
 			Port:    os.Getenv("APP_PORT"),
 			BaseURL: os.Getenv("BASE_URL"),
+			CookieDomain: os.Getenv("COOKIE_DOMAIN"),
 			Mode:    os.Getenv("MODE"),
 			Debug:   os.Getenv("DEBUG"),
 			// Origins:        origins,

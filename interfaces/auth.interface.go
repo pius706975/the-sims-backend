@@ -2,9 +2,12 @@ package interfaces
 
 import (
 	"github.com/pius706975/the-sims-backend/package/database/models"
-
-	"github.com/gin-gonic/gin"
 )
+
+type TokenResponse struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+}
 
 type AuthRepo interface {
 	SignIn(email string) (*models.User, error)
@@ -14,6 +17,6 @@ type AuthRepo interface {
 }
 
 type AuthService interface {
-	SignIn(data *models.User) (gin.H, int)
-	CreateNewAccessToken(refreshToken string) (gin.H, int)
+	SignIn(data *models.User) (*TokenResponse, int, error)
+	CreateNewAccessToken(refreshToken string) (*TokenResponse, int, error)
 }

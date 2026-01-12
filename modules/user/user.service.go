@@ -8,6 +8,7 @@ import (
 	"github.com/pius706975/the-sims-backend/middlewares"
 	"github.com/pius706975/the-sims-backend/package/database/models"
 	"github.com/pius706975/the-sims-backend/package/utils"
+	envConfig "github.com/pius706975/the-sims-backend/config"
 )
 
 type userService struct {
@@ -40,9 +41,7 @@ func (service *userService) UserRegistration(userData *models.User) (gin.H, int)
 }
 
 func (service *userService) CreateRefreshToken(userId string) (gin.H, int) {
-
 	user, err := service.repo.GetUserById(userId)
-
 	if err != nil {
 		if err.Error() == "record not found" {
 			return gin.H{"status": 404, "message": "User not found"}, 404
@@ -50,7 +49,9 @@ func (service *userService) CreateRefreshToken(userId string) (gin.H, int) {
 		return gin.H{"status": 500, "message": err.Error()}, 500
 	}
 
-	tokenPayload := middlewares.TokenPayload{
+	cfg := envConfig.LoadConfig()
+
+	payload := middlewares.TokenPayload{
 		UserId:      user.ID,
 		RoleId:      user.RoleID,
 		Email:       user.Email,
@@ -60,29 +61,37 @@ func (service *userService) CreateRefreshToken(userId string) (gin.H, int) {
 		IsSuperUser: user.IsSuperUser,
 	}
 
-	jwt := middlewares.NewToken(tokenPayload, time.Hour*168)
-	token, err := jwt.CreateToken()
+	// ===== REFRESH TOKEN ONLY =====
+	refreshClaim := middlewares.NewAccessToken(payload, time.Hour*168)
 
+	refreshToken, err := middlewares.CreateTokenWithSecret(
+		refreshClaim,
+		[]byte(cfg.JwtRefreshTokenSecret),
+	)
 	if err != nil {
-		return gin.H{"status": 500, "message": err.Error()}, 500
+		return gin.H{"status": 500, "message": "Failed to create refresh token"}, 500
 	}
 
-	expiresAt := time.Now().Add(time.Hour * 168)
+	expiresAt := time.Now().Add(7 * 24 * time.Hour)
 
-	refreshToken := &models.RefreshToken{
+	refreshTokenModel := &models.RefreshToken{
 		UserID:    user.ID,
-		Token:     token,
+		Token:     refreshToken,
 		ExpiresAt: expiresAt,
 	}
 
-	newRefreshToken, err := service.repo.CreateRefreshToken(refreshToken)
-
+	newRefreshToken, err := service.repo.CreateRefreshToken(refreshTokenModel)
 	if err != nil {
 		return gin.H{"status": 500, "message": err.Error()}, 500
 	}
 
-	return gin.H{"status": 201, "message": "Refresh token created successfully", "refresh_token": newRefreshToken.Token}, 201
+	return gin.H{
+		"status":        201,
+		"message":       "Refresh token created successfully",
+		"refresh_token": newRefreshToken.Token,
+	}, 201
 }
+
 
 func (service *userService) DeleteRefreshToken(userId string, refreshToken string) (gin.H, int) {
 	err := service.repo.DeleteRefreshToken(userId, refreshToken)
