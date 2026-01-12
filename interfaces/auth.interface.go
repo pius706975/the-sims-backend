@@ -14,9 +14,12 @@ type AuthRepo interface {
 	CreateRefreshToken(refreshToken *models.RefreshToken) (*models.RefreshToken, error)
 	DeleteRefreshTokenByUserId(userId string) error
 	GetRefreshToken(token string) (*models.RefreshToken, error)
+
+	DeleteRefreshToken(token string) error
 }
 
 type AuthService interface {
 	SignIn(data *models.User) (*TokenResponse, int, error)
 	CreateNewAccessToken(refreshToken string) (*TokenResponse, int, error)
+	SignOut(refreshToken string) (int, error)
 }

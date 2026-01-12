@@ -39,6 +39,13 @@ func (repo *authRepo) DeleteRefreshTokenByUserId(userId string) error {
 	return repo.db.Where("user_id = ?", userId).Delete(&models.RefreshToken{}).Error
 }
 
+func (repo *authRepo) DeleteRefreshToken(token string) error {
+	return repo.db.
+		Where("token = ?", token).
+		Delete(&models.RefreshToken{}).
+		Error
+}
+
 func (repo *authRepo) GetRefreshToken(token string) (*models.RefreshToken, error) {
 	var refreshToken models.RefreshToken
 	result := repo.db.Where(("token = ?"), token).First(&refreshToken)

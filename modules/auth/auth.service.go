@@ -71,6 +71,18 @@ func (service *authService) SignIn(userData *models.User) (*interfaces.TokenResp
 	}, 200, nil
 }
 
+func (service *authService) SignOut(refreshToken string) (int, error) {
+	if refreshToken == "" {
+		return 400, errors.New("refresh token is required")
+	}
+
+	if err := service.repo.DeleteRefreshToken(refreshToken); err != nil {
+		return 500, err
+	}
+
+	return 200, nil
+}
+
 func (service *authService) CreateNewAccessToken(
 	refreshToken string,
 ) (*interfaces.TokenResponse, int, error) {

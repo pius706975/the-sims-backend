@@ -24,80 +24,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/auth/create-new-access-token": {
-            "post": {
-                "description": "Create new access token by refresh token",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Create new access token",
-                "parameters": [
-                    {
-                        "description": "User data",
-                        "name": "userData",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.CreateNewAccessTokenRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/api/auth/signin": {
-            "post": {
-                "description": "Login with email and password",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Login as an authenticated user",
-                "parameters": [
-                    {
-                        "description": "User data",
-                        "name": "userData",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.SignInRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
         "/api/employee/create": {
             "post": {
                 "description": "Create a new employee with join_date and end_date in format YYYY-MM-DD",
@@ -1011,14 +937,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.CreateNewAccessTokenRequest": {
-            "type": "object",
-            "properties": {
-                "refresh_token": {
-                    "type": "string"
-                }
-            }
-        },
         "models.CreatePositionRequest": {
             "type": "object",
             "required": [
@@ -1030,17 +948,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "position_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.SignInRequest": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
                     "type": "string"
                 }
             }

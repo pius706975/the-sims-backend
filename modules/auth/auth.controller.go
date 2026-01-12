@@ -49,6 +49,40 @@ func (controller *authController) SignIn(ctx *gin.Context) {
 	})
 }
 
+func (controller *authController) SignOut(ctx *gin.Context) {
+	cfg := envConfig.LoadConfig()
+
+	refreshToken, err := ctx.Cookie("refresh_token")
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Refresh token not found",
+		})
+		return
+	}
+
+	status, err := controller.service.SignOut(refreshToken)
+	if err != nil {
+		ctx.JSON(status, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.SetCookie(
+		"refresh_token",
+		"",
+		-1, // delete cookie
+		"/",
+		cfg.CookieDomain,
+		cfg.Mode == "production",
+		true,
+	)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Successfully signed out",
+	})
+}
+
 func (controller *authController) CreateNewAccessToken(ctx *gin.Context) {
 
 	refreshToken, err := ctx.Cookie("refresh_token")
