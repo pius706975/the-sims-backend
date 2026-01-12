@@ -41,7 +41,7 @@ func (service *authService) SignIn(userData *models.User) (*interfaces.TokenResp
 		IsSuperUser: user.IsSuperUser,
 	}
 
-	accessClaim := middlewares.NewAccessToken(payload, time.Minute*15)
+	accessClaim := middlewares.NewAccessToken(payload, time.Minute*5)
 	accessToken, err := middlewares.CreateTokenWithSecret(accessClaim, []byte(cfg.JwtSecret))
 	if err != nil {
 		return nil, 500, err
@@ -100,7 +100,7 @@ func (service *authService) CreateNewAccessToken(
 
 	cfg := envConfig.LoadConfig()
 
-	accessClaim := middlewares.NewAccessToken(*payload, time.Minute*15)
+	accessClaim := middlewares.NewAccessToken(*payload, time.Minute*5)
 	accessToken, err := middlewares.CreateTokenWithSecret(
 		accessClaim,
 		[]byte(cfg.JwtSecret),

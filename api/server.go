@@ -38,14 +38,14 @@ func corsHandler(allowedOrigins []string) *cors.Cors {
 		AllowedHeaders: []string{
 			"Authorization",
 			"Content-Type",
-			"Accept",
-			"Origin",
-			"X-Requested-With",
+			// "Accept",
+			// "Origin",
+			// "X-Requested-With",
 		},
 		ExposedHeaders: []string{
 			"Content-Length",
 		},
-		AllowCredentials: false,
+		AllowCredentials: true,
 	})
 }
 
