@@ -9,6 +9,10 @@ func AuthRoutes(router *gin.Engine, controller *authController, prefix string) {
 			controller.SignIn(ctx)
 		})
 
+		authGroup.POST("/signout", func(ctx *gin.Context) {
+			controller.SignOut(ctx)
+		})
+
 		authGroup.POST("/create-new-access-token", func(ctx *gin.Context) {
 			controller.CreateNewAccessToken(ctx)
 		})

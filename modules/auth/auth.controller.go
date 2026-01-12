@@ -1,10 +1,13 @@
 package auth
 
 import (
-	"github.com/pius706975/the-sims-backend/interfaces"
-	"github.com/pius706975/the-sims-backend/package/database/models"
+	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	envConfig "github.com/pius706975/the-sims-backend/config"
+	"github.com/pius706975/the-sims-backend/interfaces"
+	"github.com/pius706975/the-sims-backend/package/database/models"
 )
 
 type authController struct {
@@ -15,58 +18,90 @@ func NewController(service interfaces.AuthService) *authController {
 	return &authController{service}
 }
 
-// SignIn godoc
-// @Summary Login as an authenticated user
-// @Description Login with email and password
-// @Tags Authentication
-// @Accept json
-// @Produce json
-// @Param userData body models.SignInRequest true "User data"
-// @Success 200
-// @Failure 401
-// @Failure 500
-// @Router /api/auth/signin [post]
 func (controller *authController) SignIn(ctx *gin.Context) {
-	ctx.Header("Content-Type", "application/json")
-
 	var userData models.User
 
-	err := ctx.ShouldBindJSON(&userData)
-	if err != nil {
-		ctx.JSON(500, gin.H{"error": "Failed to parse request"})
+	if err := ctx.ShouldBindJSON(&userData); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
 		return
 	}
 
-	responseData, status := controller.service.SignIn(&userData)
+	tokens, status, err := controller.service.SignIn(&userData)
+	if err != nil {
+		ctx.JSON(status, gin.H{"message": err.Error()})
+		return
+	}
 
-	ctx.JSON(status, responseData)
+	cfg := envConfig.LoadConfig()
+
+	ctx.SetCookie(
+		"refresh_token",
+		tokens.RefreshToken,
+		int((time.Hour * 168).Seconds()),
+		"/",
+		cfg.CookieDomain,
+		cfg.Mode == "production",
+		true, // httpOnly true
+	)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"access_token": tokens.AccessToken,
+	})
 }
 
-// CreateNewAccessToken godoc
-// @Summary Create new access token
-// @Description Create new access token by refresh token
-// @Tags Authentication
-// @Accept json
-// @Produce json
-// @Param userData body models.CreateNewAccessTokenRequest true "User data"
-// @Success 200
-// @Failure 401
-// @Failure 500
-// @Router /api/auth/create-new-access-token [post]
-func (controller *authController) CreateNewAccessToken(ctx *gin.Context) {
-	ctx.Header("Content-Type", "application/json")
+func (controller *authController) SignOut(ctx *gin.Context) {
+	cfg := envConfig.LoadConfig()
 
-	var requestData struct {
-		RefreshToken string `json:"refresh_token"`
-	}
-
-	err := ctx.ShouldBindJSON(&requestData)
+	refreshToken, err := ctx.Cookie("refresh_token")
 	if err != nil {
-		ctx.JSON(400, gin.H{"message": "Invalid request data"})
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Refresh token not found",
+		})
 		return
 	}
 
-	responseData, status := controller.service.CreateNewAccessToken(requestData.RefreshToken)
+	status, err := controller.service.SignOut(refreshToken)
+	if err != nil {
+		ctx.JSON(status, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
 
-	ctx.JSON(status, responseData)
+	ctx.SetCookie(
+		"refresh_token",
+		"",
+		-1, // delete cookie
+		"/",
+		cfg.CookieDomain,
+		cfg.Mode == "production",
+		true,
+	)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Successfully signed out",
+	})
+}
+
+func (controller *authController) CreateNewAccessToken(ctx *gin.Context) {
+
+	refreshToken, err := ctx.Cookie("refresh_token")
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Refresh token not found",
+		})
+		return
+	}
+
+	tokenResponse, status, err := controller.service.CreateNewAccessToken(refreshToken)
+	if err != nil {
+		ctx.JSON(status, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"access_token": tokenResponse.AccessToken,
+	})
 }

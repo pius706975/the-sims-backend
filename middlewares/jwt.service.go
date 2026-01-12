@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"time"
 
-	envConfig "github.com/pius706975/the-sims-backend/config"
-
 	"github.com/golang-jwt/jwt/v5"
+	envConfig "github.com/pius706975/the-sims-backend/config"
 )
 
-var jwtSecret = []byte(envConfig.LoadConfig().JwtSecret)
 
+// ===========================================
+// Payload & Claims
+// ===========================================
 type TokenPayload struct {
 	UserId      string
 	RoleId      *string
@@ -21,6 +22,7 @@ type TokenPayload struct {
 	IsActivated bool
 	IsSuperUser bool
 }
+
 type Claims struct {
 	UserId      string  `json:"user_id"`
 	RoleId      *string `json:"role_id,omitempty"`
@@ -32,27 +34,42 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func NewToken(payload TokenPayload, expiresIn time.Duration) *Claims {
+
+// ===========================================
+// Claim Builder
+// ===========================================
+func NewAccessToken(payload TokenPayload, expiresIn time.Duration) *Claims {
 	return &Claims{
-		UserId:           payload.UserId,
-		RoleId:           payload.RoleId,
-		Email:            payload.Email,
-		Username:         payload.Username,
-		Name:             payload.Name,
-		IsActivated:      payload.IsActivated,
-		IsSuperUser:      payload.IsSuperUser,
-		RegisteredClaims: jwt.RegisteredClaims{ExpiresAt: jwt.NewNumericDate(time.Now().Add(expiresIn))},
+		UserId:      payload.UserId,
+		RoleId:      payload.RoleId,
+		Email:       payload.Email,
+		Username:    payload.Username,
+		Name:        payload.Name,
+		IsActivated: payload.IsActivated,
+		IsSuperUser: payload.IsSuperUser,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(expiresIn)),
+		},
 	}
 }
 
-func (claim *Claims) CreateToken() (string, error) {
-	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
-	return accessToken.SignedString(jwtSecret)
+// ===========================================
+// Token Signer
+// ===========================================
+func CreateTokenWithSecret(claim *Claims, secret []byte) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+	return token.SignedString(secret)
 }
 
-func VerifyToken(tokenString string) (*Claims, error) {
+// ===========================================
+// Token Verifier (Access Token)
+// ===========================================
+func VerifyAccessToken(tokenString string) (*Claims, error) {
+	cfg := envConfig.LoadConfig()
+	secret := []byte(cfg.JwtSecret)
+
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(t *jwt.Token) (interface{}, error) {
-		return []byte(jwtSecret), nil
+		return secret, nil
 	})
 
 	if err != nil {
@@ -67,15 +84,18 @@ func VerifyToken(tokenString string) (*Claims, error) {
 	return claims, nil
 }
 
+// ===========================================
+// Decode Refresh Token
+// ===========================================
 func DecodeRefreshToken(tokenString string) (*TokenPayload, error) {
-	envCfg := envConfig.LoadConfig()
-	secretKey := []byte(envCfg.JwtRefreshTokenSecret)
+	cfg := envConfig.LoadConfig()
+	secret := []byte(cfg.JwtRefreshTokenSecret)
 
-	token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return secretKey, nil
+	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+		return secret, nil
 	})
 	if err != nil || !token.Valid {
-		return nil, errors.New("invalid token")
+		return nil, errors.New("invalid refresh token")
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
@@ -84,12 +104,12 @@ func DecodeRefreshToken(tokenString string) (*TokenPayload, error) {
 	}
 
 	var roleId *string
-	if val, exists := claims["role_id"]; exists && val != nil {
+	if val, ok := claims["role_id"]; ok && val != nil {
 		str := val.(string)
 		roleId = &str
 	}
 
-	payload := &TokenPayload{
+	return &TokenPayload{
 		UserId:      claims["user_id"].(string),
 		RoleId:      roleId,
 		Email:       claims["email"].(string),
@@ -97,7 +117,5 @@ func DecodeRefreshToken(tokenString string) (*TokenPayload, error) {
 		Name:        claims["name"].(string),
 		IsActivated: claims["is_activated"].(bool),
 		IsSuperUser: claims["is_superuser"].(bool),
-	}
-
-	return payload, nil
+	}, nil
 }
