@@ -1,6 +1,9 @@
 package auth
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/pius706975/the-sims-backend/middlewares"
+)
 
 func AuthRoutes(router *gin.Engine, controller *authController, prefix string) {
 	authGroup := router.Group(prefix + "/auth")
@@ -15,6 +18,10 @@ func AuthRoutes(router *gin.Engine, controller *authController, prefix string) {
 
 		authGroup.POST("/create-new-access-token", func(ctx *gin.Context) {
 			controller.CreateNewAccessToken(ctx)
+		})
+
+		authGroup.GET("/me", middlewares.AuthMiddleware(), func(ctx *gin.Context) {
+			controller.Me(ctx)
 		})
 	}
 }

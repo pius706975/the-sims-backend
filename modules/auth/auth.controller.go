@@ -105,3 +105,16 @@ func (controller *authController) CreateNewAccessToken(ctx *gin.Context) {
 		"access_token": tokenResponse.AccessToken,
 	})
 }
+
+func (controller *authController) Me(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{
+		"user": gin.H{
+			"user_id":      ctx.GetString("user_id"),
+			"email":        ctx.GetString("email"),
+			"username":     ctx.GetString("username"),
+			"name":         ctx.GetString("name"),
+			"is_activated": ctx.GetBool("is_activated"),
+			"is_superuser": ctx.GetBool("is_superuser"),
+		},
+	})
+}
